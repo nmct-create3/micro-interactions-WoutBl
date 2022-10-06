@@ -1,30 +1,21 @@
-/* -------------------------------------------------------------------------- */
-// Alle interactieve onderdelen voor onze site. We maken van alle inputs een object met zijn eigen eigenschappen.
+
 let email = {},
     password = {},
     signInButton;
-/* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-// Twee standaard functies, nog basic, maar kan je nog uitbreiden.
 const isValidEmailAddress = function (emailAddress) {
-    // Basis manier om e-mailadres te checken.
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
 };
 
 const isEmpty = function (fieldValue) {
     return !fieldValue || fieldValue.length < 1;
 };
-/* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
 const doubleCheckEmailAddress = function () {
     if (isValidEmailAddress(email.input.value)) {
-        // Stop met dit veld in de gaten te houden; het is in orde.
         email.input.removeEventListener('input', doubleCheckEmailAddress);
         removeErrors(email);
     } else {
-        // Stuk herhalende code.
         if (isEmpty(email.input.value)) {
             email.errorMessage.innerText = 'This field is required';
         } else {
@@ -35,11 +26,9 @@ const doubleCheckEmailAddress = function () {
 
 const doubleCheckPassword = function () {
     if (!isEmpty(password.input.value)) {
-        // Stop met dit veld in de gaten te houden; het is in orde.
         password.input.removeEventListener('input', doubleCheckPassword);
         removeErrors(password);
     } else {
-        // Stuk herhalende code.
         password.errorMessage.innerText = 'This field is required';
         addErrors(password);
     }
@@ -54,9 +43,7 @@ const removeErrors = function (formField) {
     formField.field.classList.remove('has-error');
     formField.errorMessage.classList.remove('is-visible');
 };
-/* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
 const getDOMElements = function () {
     email.label = document.querySelector('.js-email-label');
     email.errorMessage = email.label.querySelector('.js-email-error-message');
@@ -83,8 +70,6 @@ const enableListeners = function () {
             }
 
             addErrors(email);
-
-            // Gebruik een named function (doubleCheckPassword), om die er weer af te kunnen halen. Dit vermijd ook het dubbel toevoegen ervan.
             email.input.addEventListener('input', doubleCheckEmailAddress);
         }
     });
@@ -94,7 +79,6 @@ const enableListeners = function () {
             password.errorMessage.innerText = 'This field is required';
             addErrors(password);
 
-            // Gebruik een named function (doubleCheckPassword), om die er weer af te kunnen halen. Dit vermijd ook het dubbel toevoegen ervan.
             password.input.addEventListener('input', doubleCheckPassword);
         } else {
             removeErrors(password);
@@ -102,7 +86,6 @@ const enableListeners = function () {
     });
 
     signInButton.addEventListener('click', function (e) {
-        // We gaan de form zelf versturen wanneer nodig.
         e.preventDefault();
 
         if (
@@ -125,18 +108,9 @@ const enableListeners = function () {
         }
     });
 };
-/* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-// We kunnen pas iets doen met onze html-content (DOM) als die geladen is.
 document.addEventListener('DOMContentLoaded', function () {
-    // Ook even testen of ik DoMConteeentLoeaaded goed geschreven heb...
     console.log('DOM loaded 🥳!');
-
-    // We splitsen alles netjes op in verschillende functies.
-    // 1. Alle linken leggen naar onze HTML.
     getDOMElements();
-
-    // 2. We voegen listeners toe om te wachten op interactie
     enableListeners();
 });
