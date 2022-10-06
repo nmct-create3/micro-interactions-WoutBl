@@ -38,25 +38,33 @@
     --global-color-neutral-xx-dark: #4b4c60;
     --global-color-neutral-xxx-dark: #35374d;
     --global-color-neutral-xxxx-dark: #20223a;
+    --global-color-error: #FF3333;
+    --global-color-error-transparent: #FF3333bf;
+    --global-color-error-x-transparent: #FF33334d;
 
     /* global page settings */
-    --global-html-color: var(--global-color-neutral-xxxx-dark);
-    --global-html-backgroundColor: var(--global-color-neutral-xxxx-light);
+    --global-page-color: var(--global-color-neutral-xxxx-dark);
+    --global-page-backgroundColor: var(--global-color-neutral-xxxx-light);
     --global-selection-backgroundColor: var(--global-color-alpha);
 
-    /* borders */
+    /* border radius */
     --global-borderRadius: 3px;
     --global-borderWidth: 1px;
 
     /* transitions */
-    --global-transitionTiming-alpha: .1s ease-out;
+    --global-transitionEasing-out: ease-out;
+    --global-transitionEasing-out-cubic: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --global-transitionDuration-alpha: .1s;
+    --global-transitionDuration-beta: .2s;
+    --global-transitionDuration-gamma: .3s;
+
 
     /* Baseline settings */
     --global-baseline: 8px;
     --global-whitespace: calc(var(--global-baseline) * 3);
     /* = 24px */
 
-    --global-whitespace-xs: calc(var(--global-baseline) / 2);
+    --global-whitespace-xs: calc(var(--global-baseline) * .5);
     /* = 4px */
     --global-whitespace-sm: calc(var(--global-baseline) * 1);
     /*  = 8px */
@@ -70,14 +78,35 @@
     /*  = 72px */
 
     /* forms */
+    --global-label-color: var(--global-color-neutral-xx-dark);
     --global-placeholder-color: var(--global-color-neutral-x-light);
     --global-input-backgroundColor: White;
     --global-input-color: var(--global-color-neutral-xxxx-dark);
     --global-input-borderColor: var(--global-color-neutral-xxx-light);
     --global-input-hover-borderColor: var(--global-color-neutral-xx-light);
     --global-input-focus-borderColor: var(--global-color-alpha);
+    --global-input-focus-boxShadowSpread: 0 0 0 3px;
     --global-input-focus-boxShadowColor: var(--global-color-alpha-x-transparent);
-    --global-input-focus-boxShadow: 0 0 0 3px var(--global-input-focus-boxShadowColor);
+    --global-input-error-borderColor: var(--global-color-error);
+    --global-input-error-boxShadowColor: var(--global-color-error-x-transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --global-page-color: White;
+        --global-page-backgroundColor: var(--global-color-neutral-xxxx-dark);
+
+        --global-label-color: var(--global-color-neutral-xx-light);
+        --global-placeholder-color: var(--global-color-neutral-dark);
+        --global-input-backgroundColor: var(--global-color-neutral-xxxx-dark);
+        --global-input-color: var(--global-color-neutral-xxxx-light);
+        --global-input-borderColor: var(--global-input-backgroundColor);
+        --global-input-hover-borderColor: var(--global-input-backgroundColor);
+        --global-input-focus-borderColor: var(--global-input-backgroundColor);
+        --global-input-focus-boxShadowColor: var(--global-color-alpha-transparent);
+        --global-input-error-borderColor: var(--global-input-backgroundColor);
+        --global-input-error-boxShadowColor: var(--global-color-error-transparent);
+    }
 }
 
 /*------------------------------------*\
@@ -91,8 +120,8 @@
 */
 
 html {
-    background-color: var(--global-html-backgroundColor);
-    color: var(--global-html-color);
+    background-color: var(--global-page-backgroundColor);
+    color: var(--global-page-color);
     font-size: 16px;
     line-height: 1.5;
     font-family: "Inter Web", Helvetica, arial, sans-serif;
@@ -150,24 +179,24 @@ img {
 h1,
 h2,
 h3 {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 h1 {
     font-size: 36px;
-    line-height: 48px;
+    line-height: calc(var(--global-baseline) * 6);
     margin: 0 0 var(--global-whitespace);
 }
 
 h2 {
     font-size: 32px;
-    line-height: 40px;
+    line-height: calc(var(--global-baseline) * 5);
     margin: 0 0 var(--global-whitespace);
 }
 
 h3 {
     font-size: 26px;
-    line-height: 32px;
+    line-height: calc(var(--global-baseline) * 4);
     margin: 0 0 var(--global-whitespace);
 }
 
@@ -176,7 +205,7 @@ h5,
 h6 {
     font-size: 16px;
     font-weight: 600;
-    line-height: 24px;
+    line-height: calc(var(--global-baseline) * 3);
     margin: 0 0 var(--global-whitespace);
 }
 
@@ -203,7 +232,7 @@ li ol {
 blockquote {
     font-style: normal;
     font-size: 23px;
-    line-height: 32px;
+    line-height: calc(var(--global-baseline) * 6);
     margin: 0 0 var(--global-whitespace);
 }
 
@@ -215,33 +244,40 @@ blockquote * {
 figcaption {
     font-weight: 400;
     font-size: 12px;
-    line-height: 16px;
-    margin-top: var(--global-whitespace-sm);
+    line-height: calc(var(--global-baseline) * 2);
+    margin-top: var(--global-whitespace-xxs);
 }
 
 hr {
     border: 0;
-    height: 1px;
+    height: var(--global-borderWidth);
     background: LightGrey;
     margin: 0 0 var(--global-whitespace);
 }
 
-a,
-a:visited {
-    transition: all var(--global-transitionTiming-alpha);
-    color: var(--global-color-alpha);
-    outline-color: var(--global-link-BoxShadowColor);
+a {
+    --link-transition: all var(--global-transitionDuration-alpha) var(--global-transitionEasing-out);
+    transition: var(--link-transition);
+    color: var(--link-color, var(--global-color-alpha));
+    outline-color: var(--link-boxShadowColor);
     outline-width: medium;
     outline-offset: 2px;
 }
 
-a:hover,
-a:focus {
-    color: var(--global-color-alpha-light);
+a:visited {
+    color: var(--link-visited-color, var(--global-color-alpha));
+}
+
+a:hover {
+    color: var(--link-hover-color, var(--global-color-alpha-light));
 }
 
 a:active {
-    color: var(--global-color-alpha-dark);
+    color: var(--link-active-color, var(--global-color-alpha-dark));
+}
+
+a:focus {
+    color: var(--link-focus-color, var(--global-color-alpha));
 }
 
 label,
@@ -254,7 +290,7 @@ select {
 }
 
 input::placeholder {
-    color: var(--global-placeholder-color);
+    color: var(--input-placeholder-color, var(--global-placeholder-color));
 }
 
 /*------------------------------------*\
@@ -269,7 +305,7 @@ input::placeholder {
 
 .o-row {
     position: relative;
-    padding: var(--global-whitespace) var(--global-whitespace) 0;
+    padding: 24px 24px 0;
 }
 
 .o-row--login {
@@ -281,26 +317,74 @@ input::placeholder {
 /* size modifiers */
 
 .o-row--lg {
-    padding-top: var(--global-whitespace-xl);
-    padding-bottom: var(--global-whitespace);
+    padding-top: 48px;
+    padding-bottom: 24px;
 }
 
 .o-row--xl {
-    padding-top: var(--global-whitespace-xxl);
-    padding-bottom: var(--global-whitespace-xl);
+    padding-top: 72px;
+    padding-bottom: 48px;
 }
 
 @media (min-width: 768px) {
     .o-row {
-        padding-left: var(--global-whitespace-xl);
-        padding-right: var(--global-whitespace-xl);
+        padding-left: 48px;
+        padding-right: 48px;
     }
 }
 
 @media (min-width: 992px) {
     .o-row--xl {
         padding-top: 96px;
-        padding-bottom: var(--global-whitespace-xxl);
+        padding-bottom: 72px;
+    }
+}
+
+/*
+    Objects: Container
+    ---
+    Creates a horizontal container that sets de global max-width
+*/
+
+.o-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 79.5em;
+    /* 79.5 * 16px = 1272 */
+    width: 100%;
+}
+
+/*
+    Objects: Row
+    ---
+    Creates a horizontal row that stretches the viewport and adds padding around children
+*/
+
+.o-row {
+    position: relative;
+    padding: var(--global-whitespace) var(--global-whitespace) 0;
+}
+
+.o-row--login {
+    min-height: 100vh;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -ms-align-items: center;
+    align-items: center;
+}
+
+/* size modifiers */
+
+.o-row--lg {
+    padding-top: var(--global-whitespace-lg);
+    padding-bottom: var(--global-whitespace);
+}
+
+@media (min-width: 768px) {
+    .o-row {
+        padding-left: var(--global-whitespace-lg);
+        padding-right: var(--global-whitespace-lg);
     }
 }
 
@@ -336,7 +420,7 @@ input::placeholder {
 
     .o-section--lg+.o-section--lg,
     .o-section--xl+.o-section--xl {
-        padding-top: var(--global-whitespace-xl);
+        padding-top: var(--global-whitespace-lg);
     }
 }
 
@@ -355,6 +439,8 @@ input::placeholder {
 */
 
 .o-layout {
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
     flex-wrap: wrap;
 }
@@ -370,7 +456,7 @@ input::placeholder {
 }
 
 .o-layout--gutter>.o-layout__item {
-    padding: 0 calc(var(--global-whitespace) / 2);
+    padding: 0 12px;
 }
 
 .o-layout--gutter-sm {
@@ -382,19 +468,19 @@ input::placeholder {
 }
 
 .o-layout--gutter-lg {
-    margin: 0 -24px;
+    margin: 0 calc(var(--global-whitespace) * -1);
 }
 
 .o-layout--gutter-lg>.o-layout__item {
-    padding: 0 24px;
+    padding: 0 var(--global-whitespace);
 }
 
 .o-layout--gutter-xl {
-    margin: 0 -48px;
+    margin: 0 calc(var(--global-whitespace-lg) * -1);
 }
 
 .o-layout--gutter-xl>.o-layout__item {
-    padding: 0 var(--global-whitespace-xl);
+    padding: 0 var(--global-whitespace-lg);
 }
 
 /* reverse horizontal row modifier */
@@ -537,14 +623,11 @@ input::placeholder {
 */
 
 .c-logo {
-    --logo__path--1--Fill: var(--global-color-neutral-xxxx-dark);
-    --logo__path--2--Fill: var(--global-color-alpha);
-    --logo__path--3--Fill: var(--global-color-alpha-x-dark);
     height: var(--global-whitespace);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: var(--global-whitespace-xl);
+    margin-bottom: var(--global-whitespace-lg);
 }
 
 .c-logo__symbol {
@@ -552,15 +635,23 @@ input::placeholder {
 }
 
 .c-logo__path--1 {
-    fill: var(--logo__path--1--Fill);
+    fill: var(--logo__path--1--fill, var(--global-color-neutral-xxxx-dark));
 }
 
 .c-logo__path--2 {
-    fill: var(--logo__path--2--Fill);
+    fill: var(--logo__path--2--fill, var(--global-color-alpha));
 }
 
 .c-logo__path--3 {
-    fill: var(--logo__path--3--Fill);
+    fill: var(--logo__path--3--fill, var(--global-color-alpha-x-dark));
+}
+
+@media (prefers-color-scheme: dark) {
+    .c-logo {
+        --logo__path--1--fill: White;
+        --logo__path--2--fill: var(--logo__path--1--fill);
+        --logo__path--3--fill: var(--logo__path--1--fill);
+    }
 }
 
 /*
@@ -570,12 +661,10 @@ input::placeholder {
 */
 
 .c-card {
-    --card-backgroundColor: White;
-    --card__footer-borderColor: var(--global-color-neutral-xxx-light);
     --card-borderRadius: var(--global-borderRadius);
-    background-color: var(--card-backgroundColor);
+    background-color: var(--card-backgroundColor, White);
     margin-bottom: var(--global-whitespace);
-    border-radius: var(--card-borderRadius);
+    border-radius: var(--card-borderRadius, var(--global-borderRadius));
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, .075);
     overflow: hidden;
 }
@@ -583,30 +672,44 @@ input::placeholder {
 /* Add padding to child for more flexibility */
 .c-card__body,
 .c-card__footer {
-    padding: var(--global-whitespace) var(--global-whitespace) 0;
-    overflow: auto;
-    /* Fix margin collapse */
+    padding: var(--global-whitespace);
 }
 
 .c-card__footer {
     text-align: center;
-    border-top: 1px solid var(--card__footer-borderColor);
+    border-top: var(--global-borderWidth) solid var(--card__footer-borderColor, var(--global-color-neutral-xxx-light));
 }
 
 .c-card__title {
     text-align: center;
     font-size: 18px;
-    line-height: var(--global-whitespace);
+    line-height: calc(var(--global-baseline) * 3);
     font-weight: 600;
+}
+
+/* This allows c-card__body and __footer to have equal padding everywhere */
+
+.c-card__body>*:last-child,
+.c-card__footer>*:last-child,
+.c-card__body>*:last-child>*:last-child,
+.c-card__footer>*:last-child>*:last-child {
+    margin-bottom: 0;
 }
 
 @media (min-width: 27em) {
     .c-card__body {
-        padding: var(--global-whitespace-xl) var(--global-whitespace-xl) var(--global-whitespace);
+        padding: var(--global-whitespace-xl);
     }
 
     .c-card__title {
         margin-bottom: var(--global-whitespace-xl);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .c-card {
+        --card-backgroundColor: var(--global-color-neutral-xxx-dark);
+        --card__footer-borderColor: var(--global-color-neutral-xxxx-dark);
     }
 }
 
@@ -615,6 +718,10 @@ input::placeholder {
     ---
     Everything form related here
 */
+
+.c-form-field {
+    position: relative;
+}
 
 .c-form-field--option {
     display: flex;
@@ -628,31 +735,31 @@ input::placeholder {
 */
 
 .c-input {
+    --input-transition: all var(--global-transitionDuration-alpha) var(--global-transitionEasing-out);
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     width: 100%;
-    border: 1px solid var(--global-input-borderColor);
-    /* border: 1px solid var(--global-color-neutral-xxx-light); */
-    border-radius: var(--global-borderRadius);
-    background-color: var(--global-input-backgroundColor);
-    color: var(--global-input-color);
+    border-radius: var(--input-borderRadius, var(--global-borderRadius));
+    border: var(--input-borderWidth, var(--global-borderWidth)) solid var(--input-borderColor, var(--global-input-borderColor));
+    background-color: var(--input-backgroundColor, var(--global-input-backgroundColor));
+    color: var(--input-color, var(--global-input-color));
     font-family: inherit;
     font-size: 16px;
     line-height: calc(var(--global-baseline) * 3);
     padding: calc(var(--global-baseline) * 1.5 - var(--global-borderWidth)) var(--global-whitespace-md);
     outline: none;
-    transition: border var(--global-transition-timing-alpha), box-shadow var(--global-transition-timing-alpha);
+    transition: var(--input-transition);
 }
 
 .c-input:hover {
-    border-color: var(--global-input-hover-borderColor);
+    border-color: var(--input-hover-borderColor, var(--global-input-hover-borderColor));
 }
 
 .c-input:focus,
 .c-input:active {
-    border-color: var(--global-input-focus-borderColor);
-    box-shadow: var(--global-input-focus-boxShadow);
+    border-color: var(--input-focus-borderColor, var(--global-input-focus-borderColor));
+    box-shadow: var(--global-input-focus-boxShadowSpread) var(--input-focus-boxShadowColor, var(--global-input-focus-boxShadowColor));
 }
 
 /*
@@ -663,6 +770,12 @@ more padding on the right to avoid overlap
 .c-input--password-with-toggle {
     padding-right: 52px;
 }
+
+/* input password with floating label */
+/*
+.c-input--with-floating-label:focus {
+    box-shadow: 0 0 0 1px var(--global-input-focus-borderColor);
+} */
 
 /* option input for checkboxes and radio buttons */
 
@@ -677,16 +790,47 @@ more padding on the right to avoid overlap
 */
 
 .c-label {
-    --label-color: var(--global-color-neutral-xx-dark);
     margin-bottom: 0;
-    padding-bottom: var(--global-whitespace-sm);
     font-size: 14px;
-    line-height: 16px;
-    color: var(--label-color);
+    padding-bottom: var(--global-whitespace-sm);
+    line-height: calc(var(--global-baseline) * 2);
+    color: var(--label-color, var(--global-label-color));
 }
 
 .c-label--option {
     padding-bottom: 0;
+}
+
+.c-label__error-message {
+    font-weight: 600;
+    float: right;
+    display: none;
+}
+
+.c-label__error-message.is-visible {
+    display: block;
+}
+
+.c-label--floating {
+    position: absolute;
+    top: calc(var(--global-baseline) * 1.5);
+    left: var(--global-whitespace-sm);
+    padding: var(--global-whitespace-xs) var(--global-whitespace-sm);
+    background-color: var(--label--floating-backgroundColor, var(--global-input-backgroundColor));
+    transition: transform var(--global-transitionDuration-alpha) var(--global-transitionEasing-out);
+    z-index: 1;
+    border-radius: var(--global-borderRadius);
+}
+
+.is-floating,
+.c-form-field:focus-within .c-label--floating {
+    transform: translateY(calc(var(--global-baseline) * -3))
+}
+
+@media (prefers-color-scheme: dark) {
+    /* .c-label--floating {
+        --label--floating-backgroundColor: transparent;
+    } */
 }
 
 /*
@@ -696,56 +840,57 @@ more padding on the right to avoid overlap
 */
 
 .c-button {
-    --button-borderColor: var(--global-color-alpha-dark);
-    --button-hover-borderColor: var(--global-color-alpha-dark);
-    --button-active-borderColor: var(--global-color-alpha-dark);
-    --button-focus-borderColor: var(--global-color-alpha-dark);
-    --button-backgroundColor: var(--global-color-alpha);
-    --button-hover-backgroundColor: var(--global-color-alpha-light);
-    --button-active-backgroundColor: var(--global-color-alpha-dark);
-    --button-focus-backgroundColor: var(--global-color-alpha);
-    --button-focus-boxShadow: var(--global-input-focus-boxShadow);
     font-size: 16px;
     font-weight: 600;
-    border-radius: var(--global-borderRadius);
-    border: 1px solid var(--button-borderColor);
-    background-color: var(--button-backgroundColor);
+    border-radius: var(--button-borderRadius, var(--global-borderRadius));
+    border: var(--button-borderWidth, var(--global-borderWidth)) solid var(--button-borderColor, var(--global-color-alpha-dark));
+    background-color: var(--button-backgroundColor, var(--global-color-alpha));
     color: #fff;
+    padding: calc(var(--global-baseline) * 1.5 - var(--button-borderWidth, var(--global-borderWidth))) var(--global-whitespace-md);
     line-height: calc(var(--global-baseline) * 3);
-    padding: calc(var(--global-baseline) * 1.5 - var(--global-borderWidth)) var(--global-whitespace-md);
     width: 100%;
     outline: none;
     box-shadow: var(--button-boxShadow, 0);
-    transition: all var(--global-transitionTiming-alpha) var(--global-transitionEasing-out);
+    transition: all var(--global-transitionDuration-alpha) var(--global-transitionEasing-out);
 }
 
 .c-button:hover {
-    border-color: var(--button-hover-borderColor);
-    background-color: var(--button-hover-backgroundColor);
+    border-color: var(--button-hover-borderColor, var(--global-color-alpha-dark));
+    background-color: var(--button-hover-backgroundColor, var(--global-color-alpha-light));
 }
 
 .c-button:focus {
-    background-color: var(--button-focus-backgroundColor);
-    border-color: var(--button-focus-borderColor);
-    box-shadow: var(--button-focus-boxShadow);
+    background-color: var(--button-focus-backgroundColor, var(--global-color-alpha));
+    border-color: var(--button-focus-borderColor, var(--global-color-alpha-dark));
+    box-shadow: var(--global-input-focus-boxShadowSpread) var(--button-focus-boxShadowColor, var(--global-input-focus-boxShadowColor));
 }
 
 .c-button:active {
-    background-color: var(--button-active-backgroundColor);
-    border-color: var(--button-active-borderColor);
+    background-color: var(--button-active-backgroundColor, var(--global-color-alpha-dark));
+    border-color: var(--button-active-borderColor, var(--global-color-alpha-dark));
     box-shadow: var(--button-active-boxShadow, 0);
+}
+
+@media (prefers-color-scheme: dark) {
+    .c-button {
+        --button-borderColor: var(--global-color-alpha);
+        --button-hover-borderColor: var(--global-color-alpha-light);
+        --button-active-borderColor: var(--global-color-alpha-dark);
+        --button-focus-borderColor: var(--global-color-alpha-x-dark);
+    }
 }
 
 /*
     Component: Option list
+    ---
 */
 
 .c-option-list {
-    margin-bottom: var(--global-whitespace);
+    margin-bottom: var(--global-whitespace-lg);
 }
 
 .c-option-list__item {
-    margin-bottom: calc(var(--global-whitespace) / 2);
+    margin-bottom: calc(var(--global-baseline) * 1.5);
 }
 
 /*
@@ -757,7 +902,15 @@ more padding on the right to avoid overlap
 /* Hide the actual input with the class .o-hide-accessible */
 
 .c-custom-option {
-    --custom-option__symbol-Fill: var(--global-color-alpha);
+    --custom-option-background: var(--global-input-backgroundColor);
+    --custom-option-borderRadius: var(--global-borderRadius);
+    --custom-option-borderColor: var(--global-input-borderColor);
+    --custom-option-hover-borderColor: var(--global-input-hover-borderColor);
+    --custom-option-focus-borderColor: var(--global-input-focus-borderColor);
+    --custom-option-focus-boxShadowColor: var(--global-input-focus-boxShadowColor);
+    --custom-option-focus-boxShadow: var(--global-input-focus-boxShadowSpread) var(--custom-option-focus-boxShadowColor);
+    --custom-option__symbol-fill: var(--global-color-alpha);
+    --custom-option-transition: var(--global-transitionDuration-alpha) var(--global-transitionEasing-out);
     display: flex;
     align-items: center;
 }
@@ -766,17 +919,17 @@ more padding on the right to avoid overlap
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--global-whitespace-md);
-    height: var(--global-whitespace-md);
-    margin-right: var(--global-whitespace-sm);
-    background: var(--global-input-backgroundColor);
-    border: var(--global-borderWidth) solid var(--custom-option-borderColor, var(--global-input-borderColor));
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background: var(--custom-option-background);
+    border: 1px solid var(--custom-option-borderColor);
+    transition: all var(--custom-option-transition);
     box-shadow: var(--custom-option-boxShadow, 0);
-    transition: border var(--global-transitionTiming-alpha), box-shadow var(--global-transitionTiming-alpha);
 }
 
 .c-custom-option__fake-input--checkbox {
-    border-radius: var(--global-borderRadius);
+    border-radius: var(--custom-option-borderRadius);
 }
 
 .c-custom-option__fake-input--radio {
@@ -788,17 +941,17 @@ more padding on the right to avoid overlap
     opacity: 0;
     /* Hide the symbol initially */
     transform: scale(.5);
-    transition: transform var(--global-transitionTiming-alpha), opacity var(--global-transitionTiming-alpha);
+    transition: transform var(--custom-option-transition), opacity var(--custom-option-transition);
 }
 
 .c-custom-option__fake-input--checkbox .c-custom-option__symbol {
     width: 10px;
     height: 10px;
-    fill: var(--custom-option__symbol-Fill);
+    fill: var(--custom-option__symbol-fill);
 }
 
 .c-custom-option__fake-input--radio .c-custom-option__symbol {
-    background-color: var(--custom-option__symbol-Fill);
+    background-color: var(--custom-option__symbol-fill);
     border-radius: 100%;
     width: 6px;
     height: 6px;
@@ -807,17 +960,15 @@ more padding on the right to avoid overlap
 /* hover state */
 
 .c-custom-option:hover {
-    --custom-option-borderColor: var(--global-input-hover-borderColor);
+    --custom-option-borderColor: var(--custom-option-hover-borderColor);
 }
 
 /* focused and active state */
 
-.c-option--hidden:focus+.c-custom-option,
-.c-option--hidden:active+.c-custom-option {
-    --custom-option-borderColor: var(--global-input-focus-borderColor);
-    --custom-option-boxShadow: var(--global-input-focus-boxShadow);
+.c-option--hidden:focus-visible+.c-custom-option {
+    --custom-option-borderColor: var(--custom-option-focus-borderColor);
+    --custom-option-boxShadow: var(--custom-option-focus-boxShadow);
 }
-
 
 /* checked state */
 
@@ -835,26 +986,29 @@ more padding on the right to avoid overlap
 
 .c-custom-toggle-list {
     --toggle-list-borderColor: var(--global-color-neutral-xxx-light);
-    margin-bottom: var(--global-whitespace);
+    margin-bottom: 24px;
 }
 
 .c-custom-toggle-list__item {
-    margin-bottom: calc(var(--global-whitespace) / 2);
+    margin-bottom: 12px;
 }
 
 .c-custom-toggle-list__item+.c-custom-toggle-list__item {
-    padding-top: calc(var(--global-whitespace) / 2);
+    padding-top: 12px;
     border-top: 1px solid var(--toggle-list-borderColor);
 }
 
 .c-custom-toggle {
     --toggle-backgroundColor: var(--global-color-neutral-xxxx-light);
+    --toggle-borderColor: var(--global-input-borderColor);
+    --toggle-focus-borderColor: var(--global-input-focus-borderColor);
     --toggle-checked-borderColor: var(--global-color-alpha-dark);
     --toggle-checked-backgroundColor: var(--global-color-alpha);
-    --toggle-focus-boxShadow: var(--global-input-focus-boxShadow);
+    --toggle-focus-boxShadow: var(--global-input-focus-boxShadowSpread) var(--global-input-focus-boxShadowColor);
+    --toggle-transition: all var(--global-transitionDuration-alpha) var(--global-transitionEasing-out);
     --toggle__switch-backgroundColor: White;
     --toggle__switch-checked-backgroundColor: White;
-    --toggle__switch-transition: all var(--global-transitionTiming-alpha);
+    --toggle__switch-transition: all var(--global-transitionDuration-alpha) var(--global-transitionEasing-out);
     display: flex;
     align-items: center;
 }
@@ -868,11 +1022,11 @@ more padding on the right to avoid overlap
     display: block;
     height: 24px;
     width: 48px;
-    margin-right: var(--global-whitespace-md);
+    margin-right: 16px;
     background-color: var(--toggle-backgroundColor);
     border-radius: 32px;
-    border: var(--global-borderWidth) solid var(--toggle-borderColor, var(--global-input-borderColor));
-    transition: all var(--global-transitionTiming-alpha);
+    border: 1px solid var(--toggle-borderColor);
+    transition: var(--toggle-transition);
     box-shadow: var(--toggle-boxShadow, 0);
 }
 
@@ -895,7 +1049,7 @@ more padding on the right to avoid overlap
 /* focused and active state */
 
 .c-option--hidden:focus-visible+.c-custom-toggle {
-    --toggle-borderColor: var(--global-input-focus-borderColor);
+    --toggle-borderColor: var(--toggle-focus-borderColor);
     --toggle-boxShadow: var(--toggle-focus-boxShadow);
 }
 
@@ -913,12 +1067,26 @@ more padding on the right to avoid overlap
 
 /* special active state */
 
-.c-custom-toggle:active .c-custom-toggle__fake-input::after {
+.c-option--hidden:active+.c-custom-toggle .c-custom-toggle__fake-input::after {
     width: 28px;
 }
 
-.c-option--hidden:checked+.c-custom-toggle:active .c-custom-toggle__fake-input::after {
+.c-option--hidden:active:checked+.c-custom-toggle .c-custom-toggle__fake-input::after {
     margin-left: -6px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .c-custom-toggle-list {
+        --toggle-list-borderColor: var(--global-color-neutral-xx-dark);
+    }
+
+    .c-custom-toggle {
+        --toggle-backgroundColor: var(--global-input-backgroundColor);
+        --toggle-checked-borderColor: var(--toggle-checked-backgroundColor);
+        --toggle-focus-boxShadow: 0 0 0 1px var(--global-color-neutral-xxxx-dark), var(--global-input-focus-boxShadowSpread) var(--global-input-focus-boxShadowColor);
+        --toggle__switch-backgroundColor: var(--global-color-neutral-dark);
+        --toggle__switch-checked-backgroundColor: White;
+    }
 }
 
 /*
@@ -934,11 +1102,11 @@ more padding on the right to avoid overlap
 }
 
 .c-custom-select__symbol {
-    width: var(--global-whitespace);
-    height: var(--global-whitespace);
+    width: 24px;
+    height: 24px;
     position: absolute;
-    top: calc(var(--global-whitespace) / 2);
-    right: calc(var(--global-whitespace) / 2);
+    top: 12px;
+    right: 12px;
     pointer-events: none;
     fill: var(--global-color-neutral-x-light);
 }
@@ -949,6 +1117,243 @@ more padding on the right to avoid overlap
     Password toggle custom checkbox
 */
 
+.c-password-toggle-container {
+    position: relative;
+    display: block;
+}
+
+.c-password-toggle {
+    --password-toggle__symbol-fill: var(--global-color-neutral-x-light);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+}
+
+.c-password-toggle__label {
+    display: flex;
+    align-items: center;
+    /* top: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute; */
+    /* padding: 0 16px; */
+    padding: 14px 16px;
+}
+
+.c-password-toggle__symbol {
+    display: block;
+    width: 20px;
+    height: 20px;
+    fill: var(--password-toggle__symbol-fill);
+}
+
+.c-password-toggle__symbol--hide {
+    display: none;
+}
+
+.c-password-toggle__checkbox:checked+.c-password-toggle__label .c-password-toggle__symbol--hide {
+    display: block;
+}
+
+.c-password-toggle__checkbox:checked+.c-password-toggle__label .c-password-toggle__symbol--show {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .c-password-toggle {
+        --password-toggle__symbol-fill: var(--global-color-neutral-x-dark);
+    }
+}
+
+/* tent */
+
+.c-tent {
+    --y: 0;
+    --x: 0;
+    --tent__icon-size: calc(var(--global-baseline) * 10);
+    --tent-borderRadius: calc(var(--global-borderRadius) * 2);
+    --tent-transition: var(--global-transitionDuration-gamma) var(--global-transitionEasing-out-cubic);
+    --tent-transform-perspective: perspective(1000px) rotateY(calc(var(--y) * -10deg)) rotateX(calc(var(--x) * 10deg));
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    transition: transform var(--tent-transition);
+    transform: var(--tent-transform, var(--tent-transform-perspective));
+    transform-style: preserve-3d;
+}
+
+/* shadows are made with before and after for performance */
+
+.c-tent::before,
+.c-tent::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: opacity var(--tent-transition);
+    pointer-events: none;
+    border-radius: var(--tent-borderRadius);
+}
+
+.c-tent::before {
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, .125), 0 3px 7px -3px rgba(0, 0, 0, .2);
+    opacity: var(--tent__before-opacity, 1);
+
+}
+
+.c-tent::after {
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, .25), 0 30px 60px -30px rgba(0, 0, 0, .3), 0 -18px 60px -10px rgba(0, 0, 0, .025);
+    opacity: var(--tent__after-opacity, 0);
+}
+
+.c-tent__body {
+    border-radius: var(--tent-borderRadius);
+    background-color: var(--tent-backgroundColor, white);
+    padding: var(--tent__body-whitespace, calc(var(--tent__icon-size) / 1.25));
+    position: relative;
+    overflow: hidden;
+}
+
+.c-tent__icon-wrapper {
+    width: var(--tent__icon-size);
+    height: var(--tent__icon-size);
+    border-radius: 100%;
+    background-color: var(--tent__icon-backgroundColor, white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: calc(var(--tent__icon-size) / -2);
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .07);
+    transition: transform var(--tent-transition);
+    transform: var(--tent__icon-wrapper-transform, none);
+    transform-style: preserve-3d;
+}
+
+.c-tent__icon {
+    width: calc(var(--tent__icon-size) / 1.75);
+    height: calc(var(--tent__icon-size) / 1.75);
+}
+
+.c-tent__content {
+    color: var(--tent__content-color, var(--global-color-neutral));
+    transition: transform var(--tent-transition);
+    transform: var(--tent__content-transform, none);
+}
+
+.c-tent__content>*:last-child,
+.c-tent__content>*:last-child>*:last-child {
+    margin-bottom: 0;
+}
+
+.c-tent__title {
+    font-size: 19px;
+    font-weight: normal;
+    line-height: calc(var(--global-baseline) * 3);
+    margin-bottom: var(--global-whitespace-xs);
+    color: var(--tent__title-color, var(--global-page-color));
+}
+
+.c-tent__action {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: 600;
+    padding: calc(var(--tent__icon-size) / 5) var(--global-whitespace);
+    /* color: var(--tent__action-color, var(--global-color-alpha)); */
+    background-color: var(--tent__action-backgroundColor, var(--global-color-neutral-xxxx-light));
+    transform: var(--tent__action-opacity, translateY(calc(var(--tent__icon-size) / 2)));
+    transition: all var(--tent-transition);
+    opacity: var(--tent__action-opacity, 0);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 14px;
+}
+
+.c-tent:hover {
+    /* --y: 1; */
+    --x: 1;
+    --lift: .1rem;
+    --tent-transform: translateY(calc(var(--lift) * -1)) var(--tent-transform-perspective);
+    --tent__icon-wrapper-transform: translateZ(1.5rem) scale(.75);
+    --tent__content-transform: translateY(calc(var(--tent__icon-size) / -6));
+    --tent__action-transfrom: none;
+    --tent__action-opacity: 1;
+    --tent__before-opacity: 0;
+    --tent__after-opacity: 1;
+}
+
+.c-tent:active {
+    --tent-transform: perspective(1000px) rotateY(0) rotateX(0);
+}
+
+@media (prefers-color-scheme: dark) {
+    .c-tent {
+        --tent-backgroundColor: var(--global-color-neutral-xxx-dark);
+        --tent__content-color: var(--global-color-neutral-light);
+        --tent__icon-backgroundColor: var(--global-color-neutral-xxx-dark);
+        --tent__icon-backgroundColor: var(--global-color-alpha-light);
+        --tent__action-backgroundColor: var(--global-color-neutral-xx-dark);
+        /* --tent__action-color: white; */
+    }
+}
+
+/* icons */
+
+.c-icon__path--color-1 {
+    fill: var(--icon__path-color-1, var(--global-color-alpha-x-transparent));
+}
+
+.c-icon__path--color-2 {
+    fill: var(--icon__path-color-2, var(--global-color-alpha));
+}
+
+@media (prefers-color-scheme: dark) {
+    .c-icon {
+        --icon__path-color-1: var(--global-color-alpha-dark);
+        --icon__path-color-2: white;
+    }
+}
+
+/* Like button */
+
+.c-like__symbol {
+    position: relative;
+    width: 24px;
+    fill: var(--global-color-neutral-x-light);
+    transform: scale(1);
+    transition: transform .5s cubic-bezier(0.175, 0.885, 0.32, 2.275);
+    will-change: transform;
+}
+
+.c-like__input:checked+.c-like__label .c-like__symbol {
+    transform: scale(1.1);
+    fill: #D80027;
+}
+
+/*------------------------------------*\
+#States
+\*------------------------------------*/
+
+.has-error {
+    --label-color: var(--global-color-error);
+    --input-color: var(--global-color-error);
+    --input-placeholder-color: var(--global-color-error-transparent);
+    --input-borderColor: var(--global-input-error-borderColor);
+    --input-hover-borderColor: var(--global-input-error-borderColor);
+    --input-focus-borderColor: var(--global-input-error-borderColor);
+    --input-focus-boxShadowColor: var(--global-input-error-boxShadowColor);
+}
 
 /*------------------------------------*\
 #UTILITIES
@@ -987,19 +1392,19 @@ more padding on the right to avoid overlap
 }
 
 .u-mb-sm {
-    margin-bottom: var(--global-whitespace-sm) !important;
+    margin-bottom: 8px !important;
 }
 
 .u-mb-md {
-    margin-bottom: var(--global-whitespace-md) !important;
+    margin-bottom: 16px !important;
 }
 
 .u-mb-lg {
-    margin-bottom: var(--global-whitespace-lg) !important;
+    margin-bottom: 32px !important;
 }
 
 .u-mb-xl {
-    margin-bottom: var(--global-whitespace-xl) !important;
+    margin-bottom: 48px !important;
 }
 
 /*
